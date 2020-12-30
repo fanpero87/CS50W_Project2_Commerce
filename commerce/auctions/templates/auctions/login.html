@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="Auctions Website made on Django">
+        <meta name="author" content="Fabio Perez">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link href="{% static 'auctions/bootstrap.css' %}" rel="stylesheet">
+        <link href="{% static 'auctions/signin.css' %}" rel="stylesheet">
+        <title>{% block title %}Auctions WebApp{% endblock %}</title>
+    </head>
+    <body class="text-center">
+        <header>
+           {% if message %}
+                <div class="form-signin alert alert-primary" role="alert">
+                    <center> {{ message }}</center>
+                </div>
+            {% endif %}
+        </header>
+        <main>
+            <div>
+                <form class="form-signin" action="{% url 'login' %}" method="POST">
+                {% csrf_token %}
+                    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+                    <input class="form-control" type="text" name="username" placeholder="Username" required autofocus>
+                    <input class="form-control" type="password" name="password" placeholder="Password" required>
+                    <div class="checkbox mb-3">
+                        <label>
+                          <input type="checkbox" value="remember-me"> Remember me
+                        </label>
+                    </div>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit" value="Login">Sign in</button>
+                </form>
+                <p>Don't have an account? <a href="{% url 'register' %}">Register here.</a></p>
+                <p class="mt-5 mb-3 text-muted">&copy; 2020</p>
+            </div>
+        </main>
+    </body>
+</html>

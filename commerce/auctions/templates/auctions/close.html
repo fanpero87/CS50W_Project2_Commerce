@@ -1,0 +1,47 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+    {% if user.is_authenticated %}
+        {% if items_closed < 1 %}
+            <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
+                <div class="col-md-6 px-0">
+                    <h1 class="display-4 font-italic">No Closed Items</h1>
+                </div>
+            </div>
+        {% endif %}
+
+        {% for item in all_items %}
+            {% if item.closed == True %}
+                <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
+                    <div class="col-md-6 px-0">
+                        <h1 class="display-4 font-italic">{{ item.title }}</h1>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-950 position-relative">
+                            <!-- Left Side-->
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <div>
+                                    <h3 class="mb-0">Current Details</h3>
+                                    <p class="mb-1 text-muted">Created on: {{ item.date }} by  {{ item.user }} </p>
+                                    <h4 class="mb-1 text-muted">Winner: {{ item.winner }}</h4>
+                                </div>
+                            </div>
+                            <!-- Right side (Image)-->
+                            <div class="col-auto d-none d-lg-block">
+                                {% if not item.image %}
+                                <img src="/media/No_image_available.png" width="150" height="150">
+                                {% else %}
+                                <img class="bd-placeholder-img" src="{{ item.image.url }}" width="300" height="300">
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endblock %}

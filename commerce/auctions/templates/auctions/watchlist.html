@@ -1,0 +1,29 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+{% if user.is_authenticated %}
+        {% if items_list|length >= 1 %}
+            <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
+                <div class="col-md-6 px-0">
+                    <h1 class="display-4 font-italic">Watchlist Items</h1>
+                </div>
+            </div>
+        {% else %}
+            <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
+                <div class="col-md-6 px-0">
+                    <h1 class="display-4 font-italic">No Items in Watchlist</h1>
+                </div>
+            </div>
+        {% endif %}
+        <table class="table">
+          <tbody>
+          {% for item in items_list %}
+            <tr>
+                <td><a href="{% url 'item' item.item_id.id %}">{{item.item_id.title}}</a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+{% endif %}
+{% endblock %}>

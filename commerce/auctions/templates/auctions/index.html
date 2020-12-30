@@ -1,0 +1,36 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
+        <div class="col-md-6 px-0">
+            <h1 class="display-4 font-italic">Active Listings</h1>
+        </div>
+    </div>
+    {% if user.is_authenticated %}
+        {% for item in all_items %}
+            {% if item.closed == False %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-350 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-primary">Price: ${{item.start_price}}</strong>
+                                <h3 class="mb-0">{{ item.title }}</h3>
+                                <div class="mb-1 text-muted">Created by: {{ item.user }} on {{ item.date }}</div>
+                                <p class="card-text mb-auto">{{ item.description }}</p>
+                                <a class="stretched-link" href="{% url 'item' item.id %}" type="hidden"></a>
+                            </div>
+                            <div class="col-auto d-none d-lg-block">
+                                {% if not item.image %}
+                                <img src="/media/No_image_available.png" width="150" height="150">
+                                {% else %}
+                                <img class="bd-placeholder-img" src="{{ item.image.url }}" width="200" height="250">
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endblock %}

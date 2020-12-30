@@ -1,0 +1,117 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+    {% if user.is_authenticated %}
+        <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
+            <div class="col-md-6 px-0">
+                <h1 class="display-4 font-italic">{{ item.title }}</h1>
+            </div>
+        </div>
+        {% if item.closed %}
+            <h5>(This listing has been closed!)</h5>
+            <h6>(The winner was {{ winner }})</h6>
+        {% else %}
+            <div class="alert alert-primary" role="alert">
+                {% if message is None %}
+                <center>No Message</center>
+                {% else %}
+                <center>{{ message }}</center>
+                {% endif %}
+            </div>
+            <div>
+            {% if is_owned %}
+                 <form action="{% url 'close_listing' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                    <input class="btn btn-sm btn-primary" type="submit" value="Close this listing">
+                </form>
+                {% else %}
+                {% if watch_item is None %}
+                    <form action="{% url 'add_watchlist' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="item_id" value="{{ item.id }}">
+                        <input class="btn btn-sm btn-primary" type="submit" value="Add to Watchlist">
+                    </form>
+                {% else %}
+                    <form action="{% url 'remove_watchlist' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="item_id" value="{{ item.id }}">
+                        <input class="btn btn-sm btn-primary" type="submit" value="Remove from Watchlist">
+                    </form>
+            {% endif %}
+        {% endif %}
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-950 position-relative">
+                    <!-- Left Side-->
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <!-- Item Information-->
+                        <div>
+                            <h3 class="mb-0">Current Details</h3>
+                            <p class="mb-1 text-muted">Starting price: ${{item.start_price}}</p>
+                            <p class="mb-1 text-muted">Number of bids made: {{ all_bids }}</p>
+                            {% if max_bid is None %}
+                                <p class="mb-1 text-muted">Highest Bid: ${{ item.start_price }}</p>
+                                {% else %}
+                                <p class="mb-1 text-muted">Highest Bid: ${{ max_bid }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Place Bit Section-->
+                        <div style="margin-top:20px">
+                            {% if is_owned %}
+                            <h3 class="mb-0">You cannot Bid</h3>
+                            {% else %}
+                            <h3 class="mb-0">Place new Bid</h3>
+                            <form action="{% url 'add_bid' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="number" name="item_bid" value="{{ item.bid }}">
+                                <input type="hidden" name="item_id" value="{{ item.id }}">
+                                <br>
+                                <input class="btn btn-primary btn-sm" type="submit" value="Place" style="margin-top:10px">
+                            </form>
+                            {% endif %}
+                        </div>
+
+                        <!-- Comments Section-->
+                        <div style="margin-top:20px">
+                            <div>
+                                <h3 class="mb-0">Comments</h3>
+                                {% for comment in comments %}
+                                <div class="row each-comment">
+                                    <div class="col">
+                                        <a><strong>{{ comment.user_id }} says:</strong> {{ comment.text }}</a>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div style="margin-top:20px">
+                                <h3 class="mb-0">Add a Comment</h3>
+                                <form action="{% url 'add_comment' %}" method="POST">
+                                {% csrf_token %}
+                                <textarea name="comment" cols="35" rows="2"></textarea>
+                                <input type="hidden" name="item_id" value="{{ item.id }}">
+                                <br>
+                                <input class="btn btn-primary btn-sm" type="submit" value="Add Comment" style="margin-top:5px">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right side (Image)-->
+                    <div class="col-auto d-none d-lg-block">
+                        {% if not item.image %}
+                        <img src="/media/No_image_available.png" width="150" height="150">
+                        {% else %}
+                        <img class="bd-placeholder-img" src="{{ item.image.url }}" width="300" height="300">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endif %}
+{% endblock %}

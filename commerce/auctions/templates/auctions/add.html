@@ -1,0 +1,57 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
+        <div class="col-md-6 px-0">
+            <h1 class="display-4 font-italic">Add an Item</h1>
+        </div>
+    </div>
+    {% if user.is_authenticated %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-950 position-relative">
+                    <form action="{% url 'add' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Title</span>
+                            </div>
+                            {{ form.title }}
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Description</span>
+                            </div>
+                            {{ form.description }}
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Start biding ($USD)</span>
+                            </div>
+                            {{ form.start_price }}
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Category</span>
+                            </div>
+                            {{ form.category }}
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Image</span>
+                            </div>
+                            {{ form.image }}
+                        </div>
+
+                        <input type="submit" class="btn btn-primary" value="Add Item">
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
